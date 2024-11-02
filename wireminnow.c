@@ -36,7 +36,7 @@ int main(int argc, char ** argv) {
   int i = 1;
   while((fread(&header, HDRSIZE, 1, fptr))) {
     
-    print_pcap_packet_ver(i, header.timestamp_s, header.timestamp_nm, time_units, header.org_len, header.cap_len);
+    print_pcap_packet_minimal(i, header.timestamp_s, header.cap_len);
     
     if (fread(&ether_header, ETHERHDRSIZE, 1, fptr) != 1) {
       err("Error parsing ethernet header. Exiting.\n");
