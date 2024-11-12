@@ -3,3 +3,6 @@ wireminnow
 
 # Mac organization files
 .DS_Store
+
+# VSCode Hidden Folder
+.vscode/

@@ -12,7 +12,7 @@ TARGET = wireminnow
 $(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $^ -o $(TARGET)
 
-clean:
+clean:ma
 	rm -f $(TARGET)
 
 .PHONY: clean
