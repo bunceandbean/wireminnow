@@ -12,6 +12,7 @@
 #include "flags.h"
 #include "ipv4.h"
 #include "pcap.h"
+#include "terminal.h"
 #include "time.h"
 
 #endif

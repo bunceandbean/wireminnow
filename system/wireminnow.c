@@ -30,6 +30,8 @@ int main(int argc, char ** argv) {
     return ERR;
   }
 
+  print_fish(); // Optional Fun Fish ASCII Art
+
   const char * time_units = pcap_time_units(file_header.magic); // Get micro/nano seconds based off PCAP magic number
 
   int i = 1;
@@ -61,7 +63,9 @@ int main(int argc, char ** argv) {
       print_ipv4(ip_header);
       
     }
-     
+
+    printf("\n"); // Make it easier to read
+
     if (fseek(fptr, (pcap_packet_header.cap_len - ETHERHDRSIZE - ip4_hdr_len), SEEK_CUR)) { // Read next packet based off ipv4 offset
       err("Error parsing file. Exiting.\n");
       fclose(fptr);
