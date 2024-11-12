@@ -94,7 +94,7 @@ int main(int argc, char ** argv) {
 
     printf("\n"); // Make it easier to read
 
-    if (fseek(fptr, (pcap_packet_header.cap_len - ETHERHDRSIZE - ip4_hdr_len - udp_len), SEEK_CUR)) { // Read next packet based off ipv4 offset
+    if (fseek(fptr, (pcap_packet_header.cap_len - ETHERHDRSIZE - ip4_hdr_len - udp_len), SEEK_CUR)) { // Read next packet based off header offsets
       err("Error parsing file. Exiting.\n");
       fclose(fptr);
       fptr = NULL;

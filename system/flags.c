@@ -7,7 +7,7 @@ char * flag_strings[] = {"-IP-use-names"};
 unsigned short flags = 0x0000u;
 
 /*
-    Processes n arguments, setting the bits of unsigned short "flags" based off present flags.
+    Processes `n` arguments, setting the bits of unsigned short `flags` based off present flags.
 */
 void process_arguments(char * args[], int n) {
 
@@ -18,8 +18,8 @@ void process_arguments(char * args[], int n) {
 }
 
 /*
-    Checks if flag is set.
+    Checks if flag is set at `idx`.
 */
-int check_flag(int flag_index) {
-    return flags & (1u << flag_index);
+int check_flag(enum flag_idx idx) {
+    return flags & (1u << idx);
 }

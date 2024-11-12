@@ -28,6 +28,9 @@ unsigned int get_multicast_num(unsigned char * ip) { // If an IPv4 address is mu
 }
 /*********************/
 
+/*
+  Prints out an IPv4 packet header.
+*/
 void print_ipv4(struct iphdr ip_header) {
       printf("IP: src = ");
       char * src_hostname = gethostname((unsigned int *) ip_header.src); // Check for the host name of an IP address

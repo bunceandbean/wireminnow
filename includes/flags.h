@@ -17,7 +17,7 @@ enum flag_idx {
 
 void process_arguments(char **, int);
 
-int check_flag(int);
+int check_flag(enum flag_idx);
 
 /*********************/
 
