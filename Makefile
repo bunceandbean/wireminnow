@@ -1,10 +1,18 @@
-all: wireminnow
-    
-wireminnow-part6: wireminnow.c includes/minnow_helpers.h
-	gcc -o wireminnow wireminnow.c includes/minnow_helpers.h
+CC = gcc
+
+INCLUDES_DIR = includes
+SYSTEM_DIR = system
+
+CFLAGS = -I$(INCLUDES_DIR)
+
+SOURCES = $(wildcard $(SYSTEM_DIR)/*.c)
+
+TARGET = wireminnow
+
+$(TARGET): $(SOURCES)
+	$(CC) $(CFLAGS) $^ -o $(TARGET)
+
+clean:
+	rm -f $(TARGET)
 
 .PHONY: clean
-
-clean: 
-	rm -f wireminnow
-
