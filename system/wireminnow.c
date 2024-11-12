@@ -49,6 +49,7 @@ int main(int argc, char ** argv) {
     print_ether(ether_header.dest, ether_header.src, ether_header.type); // Print ether information
 
     int ip4_hdr_len = 0; // If we need to adjust our next fseek due to reading a datagram header
+    int udp_len = 0; // If we need to adjust our next fseek due to reading a UDP header
     if (ntohs(ether_header.type) == 0x0800) { // If we have a IPv4 address
       ip4_hdr_len = IPHDRSIZE;
       struct iphdr ip_header;
@@ -61,12 +62,39 @@ int main(int argc, char ** argv) {
       }
 
       print_ipv4(ip_header);
+
+      if (ip_header.type == 17) { // Check for UDP
+        udp_len = UDPHDRSIZE;
+        struct udphdr udp;
+        if (fread(&udp, UDPHDRSIZE, 1, fptr) != 1) { // Read UDP Header
+          err("Error parsing UDP header. Exiting.\n");
+          fclose(fptr);
+          fptr = NULL;
+          return ERR;
+        }
+
+        print_udp(udp); // Print UDP Header
+
+        int udp_payload_len = (ntohs(udp.msglen) - UDPHDRSIZE >= 32) ? 32 : ntohs(udp.msglen - UDPHDRSIZE);
+        unsigned char udp_payload[32];
+        if (fread(&udp_payload, udp_payload_len, 1, fptr) != 1) {
+            err("Error parsing UDP payload. Exiting.\n");
+            fclose(fptr);
+            fptr = NULL;
+            return ERR;
+        }
+
+        print_udp_payload(udp_payload, udp_payload_len);
+
+        udp_len += udp_payload_len;
+
+      }
       
     }
 
     printf("\n"); // Make it easier to read
 
-    if (fseek(fptr, (pcap_packet_header.cap_len - ETHERHDRSIZE - ip4_hdr_len), SEEK_CUR)) { // Read next packet based off ipv4 offset
+    if (fseek(fptr, (pcap_packet_header.cap_len - ETHERHDRSIZE - ip4_hdr_len - udp_len), SEEK_CUR)) { // Read next packet based off ipv4 offset
       err("Error parsing file. Exiting.\n");
       fclose(fptr);
       fptr = NULL;

@@ -11,6 +11,7 @@
 
 /*********************/ // FUNCTIONS
 
+void print_bytes(unsigned char *, int, int, char);
 void print_fish();
 
 /*********************/
