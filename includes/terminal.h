@@ -2,6 +2,7 @@
 #define TERMINAL_H
 
 /*********************/ // CONSTANTS
+#define LIST_INDENT "   > "
 #define BLUE_OUT "\033[0;36m"
 #define RED_OUT "\033[0;31m"
 #define NO_COLOR "\033[0m"
