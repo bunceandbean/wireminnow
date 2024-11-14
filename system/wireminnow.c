@@ -30,6 +30,8 @@ int main(int argc, char ** argv) {
     return ERR;
   }
 
+  srand(time(NULL)); // Set up random number
+  
   print_fish(); // Optional Fun Fish ASCII Art
 
   const char * time_units = pcap_time_units(file_header.magic); // Get micro/nano seconds based off PCAP magic number
