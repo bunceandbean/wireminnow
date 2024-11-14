@@ -6,7 +6,7 @@
 #define BLUE_OUT "\033[0;36m"
 #define RED_OUT "\033[0;31m"
 #define NO_COLOR "\033[0m"
-#define FISH_ART  "%s\n           FISHKISSFISHKIS\n       SFISHKISSFISHKISSFISH            F\n    ISHK   ISSFISHKISSFISHKISS         FI\n  SHKISS   FISHKISSFISHKISSFISS       FIS\nHKISSFISHKISSWIREMINNOWFISHFIFISH    KISS\n  FISHKISSFISHKISSFISHKISSFISHKISS  FISHK\n      SSFISHK%sWIREMINNOW%sISSFHKISSFISHKISSF\n  ISHKISSFISHKISSFISHKISSFISHKISSF  ISHKI\nSSFISHKISSFISHKISSFISHKISSFISHKIS    SFIS\n  HKISSWIREMINNOWSHKISSFISHKISS       FIS\n    HKISSFISHKISSFISHKISSFISHK         IS\n       SFISHKISWIREMINNOWFIS            K\n         ISSFISHKISSFISHK               \n\n%s"
+#define FISH_ART  "%s\n//==================================================================================\\\\\n||        ><(((º>                                               ><(((º>             ||\n||                                                  ><(((º>                         ||\n||                                    %sWIREMINNOW%s                                    ||\n||                                                                                  ||\n||             ><(((º>                                  ><(((º>                     ||\n\\\\==================================================================================//\n\n%s"
 /*********************/
 
 

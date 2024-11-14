@@ -75,7 +75,7 @@ int main(int argc, char ** argv) {
 
         print_udp(udp); // Print UDP Header
 
-        int udp_payload_len = (ntohs(udp.msglen) - UDPHDRSIZE >= 32) ? 32 : ntohs(udp.msglen - UDPHDRSIZE);
+        int udp_payload_len = (ntohs(udp.msglen) - UDPHDRSIZE >= 32) ? 32 : ntohs(udp.msglen) - UDPHDRSIZE; // Get payload length (max 32)
         unsigned char udp_payload[32];
         if (fread(&udp_payload, udp_payload_len, 1, fptr) != 1) {
             err("Error parsing UDP payload. Exiting.\n");
