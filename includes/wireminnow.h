@@ -15,6 +15,7 @@
 #include "ipv4.h"
 #include "pcap.h"
 #include "terminal.h"
+#include "tcp.h"
 #include "udp.h"
 
 #endif

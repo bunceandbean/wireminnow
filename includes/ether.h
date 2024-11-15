@@ -23,7 +23,7 @@ struct etherhdr {
 
 void print_xinu(unsigned char[6], unsigned char[6]);
 
-void print_ether(unsigned char[6], unsigned char[6], unsigned short);
+void print_ether(struct etherhdr);
 
 /*********************/
 

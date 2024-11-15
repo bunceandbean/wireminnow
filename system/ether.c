@@ -29,6 +29,9 @@ unsigned char xinus[XINUCOMPCOUNT][3] =
     {0xb9,0x7a,0xbd}
 };
 
+/*
+  Prints out ethernet address as numbered xinu machines (if there is a match).
+*/
 void print_xinu(unsigned char dest[6], unsigned char src[6]) {
   
   int dest_x = -1;
@@ -66,7 +69,10 @@ void print_xinu(unsigned char dest[6], unsigned char src[6]) {
 
 }
 
-void print_ether(unsigned char dest[6], unsigned char src[6], unsigned short type) {
-    print_xinu(dest, src); // Analyze Xinu MAC Addresses
-    printf("typ = %04X\n", ntohs(type));
+/*
+  Prints out ethernet header information.
+*/
+void print_ether(struct etherhdr eth) {
+    print_xinu(eth.dest, eth.src); // Analyze Xinu MAC Addresses
+    printf("typ = %04X\n", ntohs(eth.type));
 }

@@ -17,7 +17,8 @@
 /*********************/ // STRUCTS
 
 struct iphdr { //IPv4 Header
-  unsigned int unused_1;
+  unsigned short unused_1;
+  unsigned short total_len;
   unsigned int unused_2;
   char ttl;
   char type;
