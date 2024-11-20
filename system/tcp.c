@@ -7,7 +7,7 @@ char * tcp_flags[] = {"FIN", "SYN", "RST", "PSH", "ACK", "URG"};
 */
 void print_tcp_hdr(struct tcphdr tcp) {
     printf("TCP: srcport = %d dstport = %d\n", ntohs(tcp.src_port), ntohs(tcp.dest_port));
-    printf("%sseq = %u ack = %u window = %d urgent = %d\n", LIST_INDENT, ntohl(tcp.seq_num), 
+    printf("%sseq = %u ack = %u window = %d urgent = 0x%04X\n", LIST_INDENT, ntohl(tcp.seq_num), 
                                                           ntohl(tcp.ack_num), ntohs(tcp.window), ntohs(tcp.urgent_ptr));
     print_flags(tcp);
 }
@@ -28,5 +28,5 @@ void print_flags(struct tcphdr tcp) {
     Returns the hlen (adjusted) of a TCP header given a network endianness unsigned short.
 */
 int get_hlen(unsigned short hlen_flags) {
-    return (ntohs(hlen_flags) >> 10);
+    return (ntohs(hlen_flags) >> 10) & 0xFFFFFFF0;
 }

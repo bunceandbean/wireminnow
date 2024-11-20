@@ -39,113 +39,58 @@ int main(int argc, char ** argv) {
   int i = 1;
   while((fread(&pcap_packet_header, HDRSIZE, 1, fptr))) {
     
-    print_pcap_packet_sparse(i, pcap_packet_header.cap_len);
-    
-    if (fread(&ether_header, ETHERHDRSIZE, 1, fptr) != 1) {
-      err("Error parsing ethernet header. Exiting.\n");
+    char packet_buffer[MAXPACKETSIZE];
+    if (fread(&packet_buffer, pcap_packet_header.cap_len, 1, fptr) != 1) {
+      fprintf(stderr, "Error parsing packet %d. Exiting.\n", i);
       fclose(fptr);
       fptr = NULL;
       return ERR;
     }
     
-    print_ether(ether_header); // Print ether information
+    int b = 0; // Index for current location in packet_buffer
 
-    int ip4_hdr_len = 0; // If we need to adjust our next fseek due to reading a datagram header
-    int udp_len = 0; // If we need to adjust our next fseek due to reading a UDP header
-    int tcp_len = 0; // If we need to adjust our next fseek due to reading a TCP header
+    memcpy(&ether_header, packet_buffer, ETHERHDRSIZE); // Read ether_header
+    b = ETHERHDRSIZE; // Move index to end of ether_header location
+
+
     if (ntohs(ether_header.type) == 0x0800) { // If we have a IPv4 address
-      ip4_hdr_len = IPHDRSIZE;
       struct iphdr ip_header;
 
-      if (fread(&ip_header, IPHDRSIZE, 1, fptr) != 1) { // Read IP header
-        err("Error parsing IPv4 header. Exiting.\n");
-        fclose(fptr);
-        fptr = NULL;
-        return ERR;
-      }
-
-      print_ipv4(ip_header);
-
-      /* if (ip_header.type == 17) { // Check for UDP
-        udp_len = UDPHDRSIZE;
-        struct udphdr udp;
-        if (fread(&udp, UDPHDRSIZE, 1, fptr) != 1) { // Read UDP Header
-          err("Error parsing UDP header. Exiting.\n");
-          fclose(fptr);
-          fptr = NULL;
-          return ERR;
-        }
-
-        print_udp(udp); // Print UDP Header
-
-        int udp_payload_len = (ntohs(udp.msglen) - UDPHDRSIZE >= 32) ? 32 : ntohs(udp.msglen) - UDPHDRSIZE; // Get payload length (max 32)
-        unsigned char udp_payload[32];
-        if (fread(&udp_payload, udp_payload_len, 1, fptr) != 1) {
-            err("Error parsing UDP payload. Exiting.\n");
-            fclose(fptr);
-            fptr = NULL;
-            return ERR;
-        }
-
-        print_udp_payload(udp_payload, udp_payload_len);
-
-        udp_len += udp_payload_len;
-
-      } */
+      memcpy(&ip_header, &packet_buffer[b], IPHDRSIZE); // Read IP header
+      b += IPHDRSIZE;
 
       if (ip_header.type == 6) { // Check for TCP
+        
+        print_pcap_packet_sparse(i, pcap_packet_header.cap_len);
+    
+        print_ether(ether_header); // Print ether information
+      
+        print_ipv4(ip_header);
+
         struct tcphdr tcp;
-        if (fread(&tcp, TCPHDRSIZE, 1, fptr) != 1) { // Read TCP Header
-          err("Error parsing TCP header. Exiting.\n");
-          fclose(fptr);
-          fptr = NULL;
-          return ERR;
-        }
+        
+        memcpy(&tcp, &packet_buffer[b], TCPHDRSIZE);  // Read TCP Header
+        b += TCPHDRSIZE;
 
         print_tcp_hdr(tcp); // Print TCP Header
 
         int hlen = get_hlen(tcp.hlen_flags);
-        int skip_tcp_bytes = hlen - TCPHDRSIZE;
+        int skip_tcp_bytes = hlen - TCPHDRSIZE; // How many TCP header bytes to skip over
 
-        if (!skip_tcp_bytes || fseek(fptr, skip_tcp_bytes, SEEK_CUR)) { // Skip over unread TCP header bytes (w/ short circuit)
-          err("Error getting to TCP payload. Exiting.\n");
-          fclose(fptr);
-          fptr = NULL;
-          return ERR;
-        }
-
+        b += skip_tcp_bytes;
+       
         int tcp_payload_bytes = ntohs(ip_header.total_len) - IPHDRSIZE - hlen; // Get size of TCP payload
         int tcp_payload_K = (tcp_payload_bytes <= K) ? tcp_payload_bytes : K; // Get size of TCP payload to read based off K
         if (tcp_payload_K > 0) {
           printf("Start of payload: ");
-          unsigned char tcp_buffer[65546];
-          if (fread(tcp_buffer, tcp_payload_K, 1, fptr ) != 1) {
-            err("Error parsing TCP payload. Exiting.\n");
-            fclose(fptr);
-            fptr = NULL;
-            return ERR;
-          }
-          for (int i = 0; i < tcp_payload_K; i++) {
-            printf((tcp_buffer[i] >= 32 && tcp_buffer[i] <= 126) ? ("%c ") : ("%02x "), tcp_buffer[i]); // Print out payload characters
+          for (int j = 0; j < tcp_payload_K; j++) {
+            printf((packet_buffer[j+b] >= 32 && packet_buffer[j+b] <= 126) ? ("%c ") : ("%02x "), packet_buffer[j+b]); // Print out payload characters
           }
         } else {
           printf("No Data");
         }
-        printf("\n");
-        tcp_len += hlen + tcp_payload_K; // Adjust tcp_len based off read data
-        
-
+        printf("\n\n"); // Make it easier to read
       }
-      
-    }
-
-    printf("\n"); // Make it easier to read
-
-    if (fseek(fptr, (pcap_packet_header.cap_len - ETHERHDRSIZE - ip4_hdr_len - udp_len - tcp_len), SEEK_CUR)) { // Read next packet based off header offsets
-      err("Error parsing file. Exiting.\n");
-      fclose(fptr);
-      fptr = NULL;
-      return ERR;
     }
 
     i++;

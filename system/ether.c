@@ -55,13 +55,13 @@ void print_xinu(unsigned char dest[6], unsigned char src[6]) {
   }
 
   printf("Ether: ");
-  if (dest_x > 0) {
+  if (0 && dest_x > 0) { // No printing XINU's
     printf("dst = xinu%02d ", dest_x);
   } else {
     printf("dst = %02X:%02X:%02X:%02X:%02X:%02X ", dest[0], dest[1], dest[2], dest[3], dest[4], dest[5]);
   }
 
-  if (src_x > 0) {
+  if (0 && src_x > 0) {
     printf("src = xinu%02d ", src_x);
   } else {
     printf("src = %02X:%02X:%02X:%02X:%02X:%02X ", src[0], src[1], src[2], src[3], src[4], src[5]);

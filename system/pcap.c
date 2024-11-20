@@ -32,5 +32,5 @@ void print_pcap_packet_minimal(int seq, unsigned int ts_macro, unsigned int cap_
   Print out sparse PCAP packet information.
 */
 void print_pcap_packet_sparse(int seq, unsigned int cap_len) {
-  printf("Packet %d: captured length = %d\n", seq, cap_len);
+    printf("Packet %d: captured length = %d\n", seq, cap_len);
 }

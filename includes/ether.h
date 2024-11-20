@@ -5,6 +5,7 @@
 
 #define ETHERHDRSIZE 14
 #define XINUCOMPCOUNT 25
+#define MAXPACKETSIZE 65550
 
 /*********************/
 
